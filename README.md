@@ -223,3 +223,10 @@ gráfico salvo em outputs/plots/comparison_lstm_mirofish.png
     Depois rode:
         Kernel > Restart Kernel and Run All Cells
 
+## 9. Análise sobre o projeto
+
+Este projeto é didático e experimental.
+
+usa apenas preço histórico como variável principal não considera volume, volatilidade, indicadores técnicos ou notícias para previsão financeira (mercado especulativo), esses resultados não devem ser usados como recomendação de investimento nesta etapa do projeto.
+
+
