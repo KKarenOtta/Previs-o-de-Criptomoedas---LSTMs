@@ -1,232 +1,144 @@
-# Previsão de Criptomoedas com LSTM e MiroFish
+# Previsão de Criptomoedas com LSTM, MiroFish e Ensemble
 
-Projeto de Redes Neurais para previsão de preços de criptomoedas usando séries temporais, redes LSTM em TensorFlow/Keras e modelo MiroFish em PyTorch.
+Projeto de Machine Learning para previsão de preços de criptomoedas utilizando:
 
-O objetivo é comparar abordagens neurais para previsão do preço do Ethereum a partir de dados históricos da API CoinGecko.
+* LSTM (TensorFlow/Keras)
+* MiroFish (PyTorch)
+* Ensemble (combinação dos modelos)
 
 ---
 
 ## 1. Stack principal
 
 ### Linguagem
-- Python 3.12
+* Python 3.12
 
-### Machine Learning/ RN
-- TensorFlow / Keras
-- PyTorch
-- Scikit-learn
+### Machine Learning/ Redes Neurais
+* TensorFlow / Keras
+* PyTorch
+* Scikit-learn
 
 ### Dados
-- CoinGecko API
-- Pandas
-- NumPy
+* CoinGecko API
+* Pandas / NumPy
 
 ### Visualização
-- Matplotlib
+* Matplotlib
 
-### Ambiente interativo
-- Jupyter Notebook
-- IPython Kernel
+### Ambiente
+* Jupyter Notebook
 
 ---
 
-## 2. Estrutura do projeto
+## 2. Arquitetura do sistema
+
+Pipeline completo:
+
+1. Coleta de dados
+2. Feature engineering
+3. Normalização
+4. Criação de janelas temporais
+5. Treinamento LSTM
+6. Treinamento MiroFish
+7. Ensemble
+8. Avaliação
+9. Geração de relatório
+
+---
+
+## 3. Features utilizadas
+
+* Preço
+* Retorno percentual
+* Média móvel
+* Volatilidade
+* Volume (se disponível)
+
+---
+
+## 4. Como rodar o projeto
+
+### 4.1 Setup
+
+    ```bash
+    git clone https://github.com/KKarenOtta/Previs-o-de-Criptomoedas---LSTMs
+    cd Previs-o-de-Criptomoedas---LSTMs
     
-    .
-    ├── README.md
-    ├── requirements.txt
-    ├── generate_notebook.py
-    ├── notebooks
-    │   └── lstm_pipeline.ipynb
-    ├── src
-    │   ├── data_loader.py
-    │   ├── evaluate.py
-    │   ├── model_lstm.py
-    │   ├── pipeline.py
-    │   ├── predict.py
-    │   ├── preprocessing.py
-    │   ├── train.py
-    │   ├── utils.py
-    │   └── models_mirofish
-    │       ├── evaluate_mirofish.py
-    │       ├── mirofish_model.py
-    │       └── train_mirofish.py
-    └── outputs
-        ├── models
-        └── plots
+    python3.12 -m venv .venv
+    source .venv/bin/activate
+    
+    pip install -r requirements.txt
+    ```
 
+---
 
-## 3. O que cada parte faz
-        src/data_loader.py
-        Responsável por buscar dados históricos de criptomoedas na API CoinGecko.
-        Função principal:
-        get_historical_data(coin="ethereum", days=120)
-        Retorna um DataFrame com:
-        índice temporal
-        preço em USD
-        
-        src/preprocessing.py
-        Responsável pelo preparo da série temporal.
-        Inclui:
-        reamostragem por hora
-        divisão temporal treino/validação/teste
-        normalização com MinMaxScaler
-        criação de janelas temporais para modelos LSTM
-        Ponto importante:
-        O scaler deve ser ajustado apenas no treino para evitar vazamento de dados.
-        
-        src/model_lstm.py
-        Define o modelo LSTM em TensorFlow/Keras.
-        O modelo aprende padrões temporais da série e retorna uma previsão de preço normalizado para o próximo passo.
-        
-        src/models_mirofish/
-        Contém a implementação alternativa em PyTorch.
-        Arquivos principais:
-        mirofish_model.py
-        train_mirofish.py
-        evaluate_mirofish.py
-        O MiroFish também usa LSTM internamente, mas com treinamento e persistência em PyTorch.
-        
-        src/train.py
-        Treina a LSTM com:
-        EarlyStopping
-        ModelCheckpoint
-        salvamento do melhor modelo em outputs/models/
-        gráfico de perda em outputs/plots/
-        
-        src/evaluate.py
-        Avalia o modelo LSTM com métricas:
-        MSE
-        RMSE
-        MAE
-        R²
-        
-        src/predict.py
-        Faz previsão futura usando o último bloco temporal conhecido.
-        
-        src/utils.py
-        Contém funções auxiliares reutilizáveis:
-        criação de diretórios
-        seed global
-        validação de DataFrame
-        comparação de métricas
-        gráficos comparativos
-        
-        src/pipeline.py
-        Pipeline principal do projeto.
-        Integra:
-        coleta de dados
-        pré-processamento
-        treino da LSTM
-        treino do MiroFish
-        avaliação
-        comparação
-        geração de gráficos
-        persistência dos modelos
+### 4.2 Testar ambiente
 
-## 4. Como preparar o ambiente
-        
-        4.1. Copiar o projeto
-        git clone https://github.com/KKarenOtta/Previs-o-de-Criptomoedas---LSTMs
-       
-        4.2. Criar ambiente virtual com Python 3.12
-        python3.12 -m venv .venv
-        source .venv/bin/activate
-       
-        4.3. Atualizar ferramentas base
-        python -m pip install --upgrade pip setuptools wheel
-       
-        4.4. Instalar dependências
-        python -m pip install -r requirements.txt
+    ```bash
+    python - <<'PY'
+    import tensorflow, torch, pandas, numpy
+    print("Ambiente OK")
+    PY
+    ```
 
-## 5. Como validar instalação
+---
 
-    Execute:
-   
-        python - <<'PY'
-        import tensorflow as tf
-        import torch
-        import pandas as pd
-        import numpy as np
-        import sklearn
-        import matplotlib
-        print("TensorFlow:", tf.__version__)
-        print("Torch:", torch.__version__)
-        print("Pandas:", pd.__version__)
-        print("NumPy:", np.__version__)
-        print("Scikit-learn:", sklearn.__version__)
-        print("Matplotlib:", matplotlib.__version__)
-        print("Ambiente OK")
-        PY
-   
-Se tudo estiver correto, o terminal deve imprimir as versões sem erro.
+### 4.3 Rodar pipeline
 
-##6. Como testar sintaxe do projeto
-
-     python -m py_compile \
-     generate_notebook.py \
-     src/data_loader.py \
-     src/evaluate.py \
-     src/model_lstm.py \
-     src/pipeline.py \
-     src/predict.py \
-     src/preprocessing.py \
-     src/train.py \
-     src/utils.py \
-     src/models_mirofish/evaluate_mirofish.py \
-     src/models_mirofish/mirofish_model.py \
-     src/models_mirofish/train_mirofish.py
-Se não aparecer erro, todos os arquivos Python estão sintaticamente válidos.
-
-## 7. Como rodar o pipeline pelo terminal
-Teste rápido:
-
+    ```bash
     python - <<'PY'
     from src.pipeline import run_full_pipeline
     
-    result = run_full_pipeline(
-       coin="ethereum",
-       days=120,
-       window_size=24,
-       epochs=5,
-       batch_size=32,
-    )
-    
+    result = run_full_pipeline()
     print(result["metrics"])
-    print("LSTM salvo em:", result["lstm_model_path"])
-    print("MiroFish salvo em:", result["mirofish_model_path"])
-    print("Gráfico salvo em:", result["comparison_plot"])
     PY
-Saídas esperadas:
-tabela de métricas
-modelo LSTM salvo em outputs/models/lstm_model.keras
-modelo MiroFish salvo em outputs/models/mirofish_model.pt
-gráfico salvo em outputs/plots/comparison_lstm_mirofish.png
+    ```
 
-## 8. Como rodar no Jupyter Notebook
-8.1. Registrar kernel
+---
 
-    python -m ipykernel install --user \
-     --name previsao-cripto-lstm \
-     --display-name "Previsao Cripto LSTM"
+### 4.4 Gerar relatório completo
 
-8.2. Abrir Jupyter
+    ```bash
+    python reports/generate_data_report.py
+    open reports/relatorio_completo.md
+    ```
 
-    jupyter notebook
+---
 
-8.3. Abrir notebook
+## 5. Métricas utilizadas
 
-    Abra:
-        notebooks/lstm_pipeline.ipynb
-    No menu do notebook, selecione:
-        Kernel > Change Kernel > Previsao Cripto LSTM
-    Depois rode:
-        Kernel > Restart Kernel and Run All Cells
+* MAE
+* RMSE
+* MAPE
 
-## 9. Análise sobre o projeto
+---
 
-Este projeto é didático e experimental.
+## 6. Modelos
 
-usa apenas preço histórico como variável principal não considera volume, volatilidade, indicadores técnicos ou notícias para previsão financeira (mercado especulativo), esses resultados não devem ser usados como recomendação de investimento nesta etapa do projeto.
+### LSTM
+
+* Captura dependência temporal
+* Suaviza série
+
+### MiroFish
+
+* Modelo experimental
+* Menor capacidade temporal
+
+### Ensemble
+
+* Combinação dos modelos
+* Melhor desempenho geral
+
+---
+
+## 7. Análise
+
+* LSTM → melhor modelo individual
+* MiroFish → underfitting + instabilidade
+* Ensemble → melhor resultado geral
+* Não usa dados externos (macro, notícias)
+* Não é modelo financeiro real
+* Não deve ser usado para investimento
 
 
