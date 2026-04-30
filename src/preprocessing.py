@@ -3,9 +3,10 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
 
-def resample_data(df: pd.DataFrame, freq: str = "1H") -> pd.DataFrame:
+def resample_data(df: pd.DataFrame, freq: str = "1h") -> pd.DataFrame:
     df = df.resample(freq).mean()
     df = df.interpolate(method="linear")
+    df = df.ffill().bfill()
     return df
 
 
@@ -32,13 +33,11 @@ def train_test_split_time_series(X, y, train_ratio=0.7, val_ratio=0.15):
     train_end = int(total * train_ratio)
     val_end = int(total * (train_ratio + val_ratio))
 
-    X_train = X[:train_end]
-    y_train = y[:train_end]
-
-    X_val = X[train_end:val_end]
-    y_val = y[train_end:val_end]
-
-    X_test = X[val_end:]
-    y_test = y[val_end:]
-
-    return X_train, y_train, X_val, y_val, X_test, y_test
+    return (
+        X[:train_end],
+        y[:train_end],
+        X[train_end:val_end],
+        y[train_end:val_end],
+        X[val_end:],
+        y[val_end:],
+    )
